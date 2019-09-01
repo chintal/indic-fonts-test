@@ -70,9 +70,9 @@ _language_strings = {
     'Telugu': u'తెలుగులో టైప్',
     'Kannada': u'ಕನ್ನಡ ಕೀಲಿಮಣೆ',
     'Bengali': u'বাংলা কিবোর্ড',
-    'Tamil*': u'தமிழ் விசைப்பலகை',    # Source text unknown
     'Marathi*': u'मराठी कळफलक',       # Source text unknown
     'Punjabi*': u'ਪੰਜਾਬੀ ਦੇ ਬੋਰਡ',        # Source text unknown
+    'Tamil*': u'தமிழ் விசைப்பலகை',    # Source text unknown
     'Urdu*': u'اردوبورڈ',              # Source text unknown
     'Malyalam*': u'മലയാളം കീബോര്‍ഡ് ',  # Source text unknown
     'Oriya*': u'ଉତ୍କଳଲିପି',            # Source text unknown
