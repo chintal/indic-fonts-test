@@ -29,8 +29,13 @@ import pyvips
 
 # kivy
 
+backend_sdl2 = 'sdl2'
+backend_pango = 'pango'
+backend = backend_sdl2
+
+
 import os
-os.environ['KIVY_TEXT'] = 'pango'  # noqa
+os.environ['KIVY_TEXT'] = backend  # noqa
 # See https://github.com/kivy/kivy/blob/master/kivy/core/text/text_pango.py
 
 from kivy.app import App
@@ -65,17 +70,17 @@ wand_render_dir = os.path.join(os.path.join(os.getcwd(), 'wand'))
 pyvips_render_dir = os.path.join(os.path.join(os.getcwd(), 'pyvips'))
 
 _language_strings = {
-    'English': u'English Keyboard',
-    'Hindi': u'हिंदी कीबोर्ड ',
-    'Telugu': u'తెలుగులో టైప్',
-    'Kannada': u'ಕನ್ನಡ ಕೀಲಿಮಣೆ',
-    'Bengali': u'বাংলা কিবোর্ড',
-    'Marathi*': u'मराठी कळफलक',       # Source text unknown
-    'Punjabi*': u'ਪੰਜਾਬੀ ਦੇ ਬੋਰਡ',        # Source text unknown
-    'Tamil*': u'தமிழ் விசைப்பலகை',    # Source text unknown
-    'Urdu*': u'اردوبورڈ',              # Source text unknown
-    'Malyalam*': u'മലയാളം കീബോര്‍ഡ് ',  # Source text unknown
-    'Oriya*': u'ଉତ୍କଳଲିପି',            # Source text unknown
+    'English': (u'English Keyboard', None),
+    'Hindi': (u'हिंदी कीबोर्ड ', 'deva'),
+    'Telugu': (u'తెలుగులో టైప్', 'telu'),
+    'Kannada': (u'ಕನ್ನಡ ಕೀಲಿಮಣೆ', 'knda'),
+    'Bengali': (u'বাংলা কিবোর্ড', 'beng'),
+    'Marathi': (u'मराठी कळफलक', 'deva'),
+    'Punjabi*': (u'ਪੰਜਾਬੀ ਦੇ ਬੋਰਡ', 'deva'),        # Source text unknown
+    'Tamil*': (u'தமிழ் விசைப்பலகை', 'taml'),    # Source text unknown
+    'Urdu': (u'اردوبورڈ', 'arab'),
+    'Malyalam*': (u'മലയാളം കീബോര്‍ഡ് ', 'mlym'),  # Source text unknown
+    'Oriya*': (u'ଉତ୍କଳଲିପି', 'orya'),            # Source text unknown
 }
 
 
@@ -124,7 +129,7 @@ def render_pyvips_image(lang, text):
 
 
 class LangDisplay(BoxLayout):
-    def __init__(self, lang, text, *args, **kwargs):
+    def __init__(self, lang, text, hzlang, *args, **kwargs):
         kwargs.setdefault('orientation', 'horizontal')
         super(LangDisplay, self).__init__(*args, **kwargs)
         self.spacing = '5px'
@@ -132,8 +137,17 @@ class LangDisplay(BoxLayout):
         self.add_widget(ColorLabel(text=lang, bgcolor=(0, 0, 0), size_hint_x=0.5,
                                    font_size='20sp', font_name=font))
 
-        self.add_widget(ColorLabel(text=text, bgcolor=(0, 140/255, 150/255),
-                                   font_size='24sp', font_name=font))
+        _kwargs = {
+            'text': text,
+            'bgcolor': (0, 140 / 255, 150 / 255),
+            'font_size': '24sp',
+            'font_name': font,
+        }
+
+        if backend == backend_sdl2:
+            _kwargs.update({'text_language': hzlang})
+
+        self.add_widget(ColorLabel(**_kwargs))
 
         if display_pil_output:
             pil_image = Image(source=os.path.join(pil_render_dir, '{0}.png'.format(lang)),
@@ -156,7 +170,7 @@ class IndicFontTestApp(App):
         root = BoxLayout(orientation='vertical', spacing='3px')
         title = BoxLayout(orientation='horizontal')
         title.add_widget(Label(text="Language", font_size='20sp', size_hint_x=0.5))
-        title.add_widget(Label(text="Kivy (pango)", font_size='20sp'))
+        title.add_widget(Label(text="Kivy ({})".format(backend), font_size='20sp'))
         if display_pil_output:
             title.add_widget(Label(text="pillow (raqm)", font_size='20sp'))
         if display_pyvips_output:
@@ -164,8 +178,8 @@ class IndicFontTestApp(App):
         if display_wand_output:
             title.add_widget(Label(text="Wand", font_size='20sp'))
         root.add_widget(title)
-        for lang in _language_strings.keys():
-            root.add_widget(LangDisplay(lang, _language_strings[lang]))
+        for lang, (text, hzlang) in _language_strings.items():
+            root.add_widget(LangDisplay(lang, text, hzlang))
         return root
 
 
@@ -175,7 +189,7 @@ if __name__ == '__main__':
     os.makedirs(pyvips_render_dir, exist_ok=True)
     for lang in _language_strings.keys():
         print(lang)
-        render_pil_image(lang, _language_strings[lang])
-        render_wand_image(lang, _language_strings[lang])
-        render_pyvips_image(lang, _language_strings[lang])
+        render_pil_image(lang, _language_strings[lang][0])
+        render_wand_image(lang, _language_strings[lang][0])
+        render_pyvips_image(lang, _language_strings[lang][0])
     IndicFontTestApp().run()
