@@ -76,11 +76,11 @@ _language_strings = {
     'Kannada': (u'ಕನ್ನಡ ಕೀಲಿಮಣೆ', 'knda'),
     'Bengali': (u'বাংলা কিবোর্ড', 'beng'),
     'Marathi': (u'मराठी कळफलक', 'deva'),
-    'Punjabi*': (u'ਪੰਜਾਬੀ ਦੇ ਬੋਰਡ', 'deva'),        # Source text unknown
-    'Tamil*': (u'தமிழ் விசைப்பலகை', 'taml'),    # Source text unknown
+    'Punjabi*': (u'ਪੰਜਾਬੀ ਦੇ ਬੋਰਡ', 'deva'),           # Source text unverified
+    'Tamil*': (u'தமிழ் விசைப்பலகை', 'taml'),     # Source text unverified
     'Urdu': (u'اردوبورڈ', 'arab'),
-    'Malyalam*': (u'മലയാളം കീബോര്‍ഡ് ', 'mlym'),  # Source text unknown
-    'Oriya*': (u'ଉତ୍କଳଲିପି', 'orya'),            # Source text unknown
+    'Malyalam*': (u'മലയാളം കീബോര്‍ഡ് ', 'mlym'),  # Source text unverified
+    'Oriya*': (u'ଉତ୍କଳଲିପି', 'orya'),                  # Source text unverified
 }
 
 
