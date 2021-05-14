@@ -28,10 +28,16 @@ import pyvips
 
 
 # kivy
+use_fcm = False
 
 backend_sdl2 = 'sdl2'
 backend_pango = 'pango'
-backend = backend_sdl2
+preferred_backend = backend_sdl2
+
+if use_fcm:
+    backend = backend_pango
+else:
+    backend = preferred_backend
 
 
 import os
@@ -52,7 +58,6 @@ except ImportError:
             kwargs.pop('bgcolor', None)
             super(ColorLabel, self).__init__(*args, **kwargs)
 
-
 # make sure you have the fonts locally in a fonts/ directory
 font_sakalbharati = '../fonts/Sakalbharati.ttf'
 font_arialuni = '../fonts/ARIALUNI.TTF'
@@ -60,6 +65,17 @@ font_freesans = '../fonts/FreeSans.ttf'
 
 fonts = [font_sakalbharati, font_arialuni, font_freesans]
 font = font_sakalbharati
+
+# Kivy Font Context
+
+# Create a font context containing system fonts + Noto TTFs
+# FontContextManager.create('system://indic_fonts_test')
+if use_fcm:
+    from kivy.core.text import FontContextManager
+    font_context = 'indic_fonts_test'
+    FontContextManager.create(font_context)
+    for filename in os.listdir('../fonts/noto'):
+        font_family = FontContextManager.add_font(font_context, os.path.join('../fonts/noto', filename))
 
 display_pil_output = True
 display_wand_output = True
@@ -141,9 +157,15 @@ class LangDisplay(BoxLayout):
             'text': text,
             'bgcolor': (0, 140 / 255, 150 / 255),
             'font_size': '24sp',
-            'font_name': font,
         }
-
+        if not use_fcm:
+            _kwargs.update({
+                'font_name': font,
+            })
+        else:
+            _kwargs.update({
+                'font_context': font_context,
+            })
         if backend == backend_sdl2:
             _kwargs.update({'text_language': hzlang})
 
