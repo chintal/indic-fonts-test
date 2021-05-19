@@ -28,7 +28,7 @@ import pyvips
 
 
 # kivy
-use_fcm = False
+use_fcm = True
 
 backend_sdl2 = 'sdl2'
 backend_pango = 'pango'
